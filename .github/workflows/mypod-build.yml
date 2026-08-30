@@ -1,0 +1,50 @@
+name: Build MyPod (Debug)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+
+jobs:
+  build_debug:
+    name: Build Debug APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Init metroproto submodule
+        run: git submodule update --init metroproto
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Set Up Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Setup and Generate Protobuf
+        uses: ./.github/actions/setup-protobuf
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Debug APK
+        run: ./gradlew --console=plain assembleFossDebug -x lint -x lintFossDebug --warning-mode summary
+        env:
+          METROLIST_APPLICATION_ID: com.gobovr.mypod
+          METROLIST_APP_NAME: MyPod
+          PULL_REQUEST: "false"
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          # Optional: last.fm scrobbling. App builds fine without these,
+          # scrobbling just stays disabled. Add as repo secrets if you want it.
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+          LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v6
+        with:
+          name: MyPod-debug-apk
+          path: app/build/outputs/apk/foss/debug/*.apk
