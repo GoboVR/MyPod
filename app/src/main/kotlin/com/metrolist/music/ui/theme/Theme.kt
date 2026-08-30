@@ -28,6 +28,13 @@ import com.materialkolor.score.Score
 
 val DefaultThemeColor = Color(0xFFED5564)
 
+// MyPod: the actual color MyPod opens with. Deliberately NOT the same value
+// as DefaultThemeColor above -- that constant doubles as a sentinel meaning
+// "use system dynamic color" (see useSystemDynamicColor below), so reusing
+// it here would make picking this exact orange from the palette behave like
+// unsetting the color instead of selecting it.
+val MyPodDefaultThemeColor = Color(0xFFB5490A) // Zune HD burnt orange
+
 @Composable
 fun MetrolistTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

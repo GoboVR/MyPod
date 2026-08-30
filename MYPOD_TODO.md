@@ -42,17 +42,35 @@ free and need a deliberate D-Pad equivalent designed for each:
 - `ui/component/SpotifyHomeSectionRow.kt`, `Dialog.kt`
 
 ## Theme
-Added "Zune" (burnt orange, `#B5490A`) and "iPod" (steel blue-grey,
-`#5A6B7A`) as real, selectable entries in Settings → Theme → the existing
-color palette list (`ThemeScreen.kt`). These work today — Meld already
-generates its whole Material You color scheme from one seed color, so
-adding a preset is just adding a color + name.
+**Zune is now the actual default look**, not an opt-in palette choice:
+- App opens in dark mode + pure black background by default
+  (`MainActivity.kt`: `DarkModeKey` default → `ON`, `PureBlackKey` default →
+  `true`)
+- Default seed color is Zune burnt orange (`MyPodDefaultThemeColor`,
+  `#B5490A` in `ui/theme/Theme.kt`), not Meld's crimson, and system dynamic
+  color is off by default (`DynamicThemeKey` → `false`) so wallpaper-based
+  theming doesn't override it
+- Headline/display/titleLarge text (app name, section titles like "Trending
+  community playlists") now uses Zune's oversized, light-weight "twist"
+  look (`ui/theme/Type.kt`). Body/label/list text deliberately left close
+  to normal for legibility — Zune's real UI also kept list text plain.
+- "Zune" and "iPod" still also exist as manually-selectable palette entries
+  in Settings → Theme, in case you want to browse other seed colors
 
-**Not yet done:** actual iPod/Zune *visual identity* beyond an accent
-color — the iPod click-wheel circular nav, the Zune tile-based home
-layout, Zune's oversized "twist" typography. That's a bigger layout-level
-project, not a color swap, and is a good next step once the base app is
-confirmed working.
+**Not yet done:** tile/card shapes (Zune uses sharper, less-rounded tiles
+than Material's default rounded corners) — this touches many individual
+component files (`Items.kt`, `Library.kt`, etc.) and needs doing carefully,
+file by file, rather than blindly. Also not done: the actual Zune
+tile-grid *layout* for Home (bigger tiles, different arrangement than
+Meld's current horizontal-scroll rows) — that's a genuine screen redesign,
+next up.
+
+## Old theme notes (superseded by the above, kept for context)
+"Zune" and "iPod" were added as real, selectable entries in Settings →
+Theme → the existing color palette list (`ThemeScreen.kt`). Meld already
+generates its whole Material You color scheme from one seed color, so
+adding a preset was just adding a color + name — now Zune's color is also
+the default, not just an option.
 
 ## Build
 `.github/workflows/mypod-build.yml` — debug-only, no signing secrets
