@@ -1,5 +1,6 @@
 package com.gobovr.mypod.ui.nav
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -27,12 +28,13 @@ import androidx.compose.ui.unit.dp
  * key events, and physical/keyboard arrow keys produce the exact same key
  * codes. That means one focus-navigation system, built on Compose's built-in
  * `focusable()` + `onKeyEvent`, handles D-Pad, joystick, AND keyboard for free
- * -- we don't need three separate input handlers.
+ * -- we don't need three separate input handlers. `clickable()` is added on
+ * top so a plain touch tap triggers the same onSelect.
  *
  * Each focusable row/tile in the UI wraps its Modifier with
  * `.focusableListItem()` below. Up/Down/Left/Right move focus using
- * Compose's built-in FocusManager (moveFocus), and DPAD_CENTER / Enter
- * triggers onSelect.
+ * Compose's built-in FocusManager (moveFocus), DPAD_CENTER / Enter triggers
+ * onSelect, and so does a touch tap.
  */
 @Composable
 fun Modifier.focusableListItem(
@@ -50,6 +52,7 @@ fun Modifier.focusableListItem(
                 false
             }
         }
+        .clickable { onSelect() }
 }
 
 /** Simple demo list proving focus moves correctly with D-Pad/joystick/arrow keys. */
